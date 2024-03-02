@@ -12,8 +12,9 @@ const searchButton = document.querySelector('.search-btn');
 const gallery = document.querySelector('.gallery');
 
 searchButton.addEventListener('click', () => {
-  const query = inputSearch.value.trim().split(' ').join('+');
-  if (!query) {
+  const q = inputSearch.value.trim().split(' ').join('+');
+  console.log(q);
+  if (!q) {
     iziToast.error({
       color: 'red',
       message: 'Please fill in the querry, what are you looking for?',
@@ -24,9 +25,10 @@ searchButton.addEventListener('click', () => {
     return;
   }
   gallery.innerHTML = '<span class="loader"></span>';
-  fetchImages(query)
-    .then(data => {
-      const images = data.hits;
+  fetchImages(q)
+    .then(Data => {
+      const images = Data.hits;
+      console.log(images);
       if (images.length === 0) {
         iziToast.error({
           color: 'yellow',
@@ -55,7 +57,7 @@ searchButton.addEventListener('click', () => {
     })
     .finally(() => {
       inputSearch.value = '';
-      let lastQuery = query.split('+').join(' ');
+      let lastQuery = q.split('+').join(' ');
       inputSearch.placeholder = `Last searched for "${lastQuery}"`;
     });
 });
