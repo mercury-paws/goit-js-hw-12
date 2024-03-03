@@ -1,6 +1,6 @@
 export function displayImages(images) {
   const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = images
+  const markup = images
     .map(
       ({
         webformatURL,
@@ -28,4 +28,5 @@ export function displayImages(images) {
       }
     )
     .join('');
+  gallery.insertAdjacentHTML('beforeend', markup);
 }

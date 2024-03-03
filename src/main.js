@@ -11,10 +11,19 @@ const inputSearch = document.querySelector('.input-picstyle');
 const searchButton = document.querySelector('.search-btn');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.loadmore-btn');
-let page;
+const loader = document.querySelector('.loader');
+const theEnd = document.querySelector('.the-end');
+
+let lastQuery = '';
 
 searchButton.addEventListener('click', async () => {
+  let page = 1;
+  const perpage = 15;
+  gallery.innerHTML = null;
+
   const q = inputSearch.value.trim().split(' ').join('+');
+  theEnd.classList.add('is-hidden');
+  lastQuery = q;
   console.log(q);
   if (!q) {
     iziToast.error({
@@ -26,11 +35,16 @@ searchButton.addEventListener('click', async () => {
     });
     return;
   }
-  gallery.innerHTML = '<span class="loader"></span>';
-
+  // gallery.insertAdjacentHTML('afterbegin', loader);
+  // gallery.innerHTML = '<span class="loader"></span>';
+  loader.classList.remove('is-hidden');
   try {
-    const images = await fetchImages(q);
+    const images = await fetchImages(q, page, perpage);
+    console.log(images);
+
     if (images.length === 0) {
+      gallery.innerHTML = null;
+      loadMoreBtn.classList.add('is-hidden');
       iziToast.error({
         color: 'yellow',
         message:
@@ -41,8 +55,12 @@ searchButton.addEventListener('click', async () => {
       });
     } else {
       displayImages(images);
-      page = 1;
+      loader.classList.add('is-hidden');
       loadMoreBtn.classList.remove('is-hidden');
+      if (images.length <= 14) {
+        loadMoreBtn.classList.add('is-hidden');
+        theEnd.classList.remove('is-hidden');
+      }
       let lightboxInstance = new SimpleLightbox('.pic-card a', {
         captionsData: 'alt',
         captionDelay: 250,
@@ -60,13 +78,20 @@ searchButton.addEventListener('click', async () => {
     });
   } finally {
     inputSearch.value = '';
-    let lastQuery = q.split('+').join(' ');
-    inputSearch.placeholder = `Last searched for "${lastQuery}"`;
+    let lastInput = q.split('+').join(' ');
+    inputSearch.placeholder = `Last searched for "${lastInput}"`;
+
+    loadMoreBtn.addEventListener('click', async () => {
+      loader.classList.remove('is-hidden');
+      try {
+        page++;
+        let images = await fetchImages(lastQuery, page, perpage);
+
+        loader.classList.add('is-hidden');
+        displayImages(images);
+      } catch (error) {
+        console.error('Error while fetching images:', error.message);
+      }
+    });
   }
 });
-
-// loadMoreBtn.addEventListener('click', event => {
-//   page++;
-//   const q = inputSearch.value.trim().split(' ').join('+');
-//   fetchImages(q);
-// });

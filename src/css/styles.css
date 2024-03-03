@@ -30,6 +30,15 @@ body {
 .loadmore-btn.is-hidden {
   display: none;
 }
+.loader.is-hidden {
+  display: none;
+}
+.the-end {
+  margin-top: 40px;
+}
+.the-end.is-hidden {
+  display: none;
+}
 .gallery {
   display: flex;
   flex-direction: row;
@@ -122,7 +131,7 @@ body {
 }
 .pic-card img {
   height: 200px;
-  object-fit: fill;
+  object-fit: cover;
   width: 360px;
 }
 .gallery-link {
