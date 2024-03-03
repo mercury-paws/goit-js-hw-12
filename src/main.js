@@ -14,6 +14,13 @@ const loadMoreBtn = document.querySelector('.loadmore-btn');
 const loader = document.querySelector('.loader');
 const theEnd = document.querySelector('.the-end');
 
+// const cardLength = card.getBoundingClientRect();
+// window.scrollBy({
+//   cardLength: 2,
+//   top: 100,
+//   behavior: 'smooth',
+// });
+
 let lastQuery = '';
 
 searchButton.addEventListener('click', async () => {
@@ -89,6 +96,13 @@ searchButton.addEventListener('click', async () => {
 
         loader.classList.add('is-hidden');
         displayImages(images);
+        const card = document.querySelector('.pic-card');
+        let cardLength = card.getBoundingClientRect();
+
+        window.scrollBy({
+          top: 2 * cardLength.height,
+          behavior: 'smooth',
+        });
       } catch (error) {
         console.error('Error while fetching images:', error.message);
       }
