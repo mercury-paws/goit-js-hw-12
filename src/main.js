@@ -14,13 +14,6 @@ const loadMoreBtn = document.querySelector('.loadmore-btn');
 const loader = document.querySelector('.loader');
 const theEnd = document.querySelector('.the-end');
 
-// const cardLength = card.getBoundingClientRect();
-// window.scrollBy({
-//   cardLength: 2,
-//   top: 100,
-//   behavior: 'smooth',
-// });
-
 let lastQuery = '';
 
 searchButton.addEventListener('click', async () => {
@@ -42,8 +35,6 @@ searchButton.addEventListener('click', async () => {
     });
     return;
   }
-  // gallery.insertAdjacentHTML('afterbegin', loader);
-  // gallery.innerHTML = '<span class="loader"></span>';
   loader.classList.remove('is-hidden');
   try {
     const images = await fetchImages(q, page, perpage);
