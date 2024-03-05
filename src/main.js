@@ -94,7 +94,11 @@ loadMoreBtn.addEventListener('click', async () => {
     displayImages(images);
     const card = document.querySelector('.pic-card');
     let cardLength = card.getBoundingClientRect();
-
+    let lightboxInstance = new SimpleLightbox('.pic-card a', {
+      captionsData: 'alt',
+      captionDelay: 250,
+    });
+    lightboxInstance.refresh();
     window.scrollBy({
       top: 2 * cardLength.height,
       behavior: 'smooth',
