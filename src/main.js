@@ -15,12 +15,13 @@ const loader = document.querySelector('.loader');
 const theEnd = document.querySelector('.the-end');
 
 let lastQuery = '';
+let page = 1;
+const perpage = 15;
 
+// event listener for Search button
 searchButton.addEventListener('click', async () => {
-  let page = 1;
   const perpage = 15;
   gallery.innerHTML = null;
-
   const q = inputSearch.value.trim().split(' ').join('+');
   theEnd.classList.add('is-hidden');
   lastQuery = q;
@@ -54,10 +55,11 @@ searchButton.addEventListener('click', async () => {
     } else {
       displayImages(images);
       loader.classList.add('is-hidden');
-      loadMoreBtn.classList.remove('is-hidden');
       if (images.length <= 14) {
         loadMoreBtn.classList.add('is-hidden');
         theEnd.classList.remove('is-hidden');
+      } else {
+        loadMoreBtn.classList.remove('is-hidden');
       }
       let lightboxInstance = new SimpleLightbox('.pic-card a', {
         captionsData: 'alt',
@@ -78,25 +80,26 @@ searchButton.addEventListener('click', async () => {
     inputSearch.value = '';
     let lastInput = q.split('+').join(' ');
     inputSearch.placeholder = `Last searched for "${lastInput}"`;
+  }
+});
 
-    loadMoreBtn.addEventListener('click', async () => {
-      loader.classList.remove('is-hidden');
-      try {
-        page++;
-        let images = await fetchImages(lastQuery, page, perpage);
+// event listener for Load More button
+loadMoreBtn.addEventListener('click', async () => {
+  loader.classList.remove('is-hidden');
+  try {
+    page++;
+    let images = await fetchImages(lastQuery, page, perpage);
 
-        loader.classList.add('is-hidden');
-        displayImages(images);
-        const card = document.querySelector('.pic-card');
-        let cardLength = card.getBoundingClientRect();
+    loader.classList.add('is-hidden');
+    displayImages(images);
+    const card = document.querySelector('.pic-card');
+    let cardLength = card.getBoundingClientRect();
 
-        window.scrollBy({
-          top: 2 * cardLength.height,
-          behavior: 'smooth',
-        });
-      } catch (error) {
-        console.error('Error while fetching images:', error.message);
-      }
+    window.scrollBy({
+      top: 2 * cardLength.height,
+      behavior: 'smooth',
     });
+  } catch (error) {
+    console.error('Error while fetching images:', error.message);
   }
 });
