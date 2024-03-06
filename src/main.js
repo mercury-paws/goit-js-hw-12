@@ -22,10 +22,14 @@ const perpage = 15;
 searchButton.addEventListener('click', async () => {
   const perpage = 15;
   gallery.innerHTML = null;
+
+  // скидання сторінки
+  page = 1;
+  //
   const q = inputSearch.value.trim().split(' ').join('+');
   theEnd.classList.add('is-hidden');
   lastQuery = q;
-  console.log(q);
+
   if (!q) {
     iziToast.error({
       color: 'red',
@@ -39,7 +43,6 @@ searchButton.addEventListener('click', async () => {
   loader.classList.remove('is-hidden');
   try {
     const images = await fetchImages(q, page, perpage);
-    console.log(images);
 
     if (images.length === 0) {
       gallery.innerHTML = null;
@@ -55,7 +58,7 @@ searchButton.addEventListener('click', async () => {
     } else {
       displayImages(images);
       loader.classList.add('is-hidden');
-      if (images.length <= 14) {
+      if (images.length < 15) {
         loadMoreBtn.classList.add('is-hidden');
         theEnd.classList.remove('is-hidden');
       } else {
@@ -103,6 +106,12 @@ loadMoreBtn.addEventListener('click', async () => {
       top: 2 * cardLength.height,
       behavior: 'smooth',
     });
+
+    //відображення We're sorry, but you've reached the end of search results.
+    if (images.length < 15) {
+      loadMoreBtn.classList.add('is-hidden');
+      theEnd.classList.remove('is-hidden');
+    }
   } catch (error) {
     console.error('Error while fetching images:', error.message);
   }

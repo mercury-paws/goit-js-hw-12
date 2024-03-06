@@ -12,7 +12,6 @@ export async function fetchImages(q, page, perpage) {
       safesearch: true,
     },
   });
-  console.log(response.data.total);
   if (response.status !== 200) {
     throw new Error('Image error!');
   }
